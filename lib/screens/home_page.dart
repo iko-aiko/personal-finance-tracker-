@@ -26,21 +26,31 @@ class HomePage extends StatelessWidget {
         .collection('users')
         .doc(user.uid);
 
-    final transactionRef =
-        userRef.collection('transactions');
+    final transactionRef = userRef.collection('transactions');
 
     return Scaffold(
+      backgroundColor: const Color(0xFFFFF7FA),
+
       appBar: AppBar(
-        title: const Text('Personal Finance Tracker'),
-        backgroundColor: Colors.deepPurple,
-        foregroundColor: Colors.white,
+        title: const Text(
+          'My Finance',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 21,
+          ),
+        ),
+        backgroundColor: const Color(0xFFF8DCE8),
+        foregroundColor: const Color(0xFF554452),
+        elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.logout_rounded),
+            tooltip: 'Logout',
             onPressed: () async {
               final confirm = await showDialog<bool>(
                 context: context,
                 builder: (context) => AlertDialog(
+                  backgroundColor: Colors.white,
                   title: const Text('Logout'),
                   content: const Text(
                     'Apakah kamu yakin ingin keluar?',
@@ -56,7 +66,12 @@ class HomePage extends StatelessWidget {
                       onPressed: () {
                         Navigator.pop(context, true);
                       },
-                      child: const Text('Logout'),
+                      child: const Text(
+                        'Logout',
+                        style: TextStyle(
+                          color: Color(0xFFD77FA5),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -79,8 +94,9 @@ class HomePage extends StatelessWidget {
       ),
 
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // SAPAAN PENGGUNA
+          // HEADER DAN SAPAAN
           StreamBuilder<DocumentSnapshot>(
             stream: userRef.snapshots(),
             builder: (context, snapshot) {
@@ -95,21 +111,69 @@ class HomePage extends StatelessWidget {
 
               return Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                color: Colors.deepPurple.shade100,
+                margin: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(22),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color(0xFFF8DCE8),
+                      Color(0xFFE9DDF8),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(25),
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Halo, $nama!',
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                    const Text(
+                      'Hello, welcome back!',
+                      style: TextStyle(
+                        color: Color(0xFF8B7181),
+                        fontSize: 14,
                       ),
                     ),
-                    const SizedBox(height: 5),
+
+                    const SizedBox(height: 8),
+
+                    Text(
+                      'Halo, $nama! ♡',
+                      style: const TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF554452),
+                      ),
+                    ),
+
+                    const SizedBox(height: 8),
+
                     const Text(
-                      'Selamat datang di Personal Finance Tracker',
+                      'Yuk, kelola keuanganmu hari ini.',
+                      style: TextStyle(
+                        color: Color(0xFF806D7B),
+                        fontSize: 13,
+                      ),
+                    ),
+
+                    const SizedBox(height: 18),
+
+                    const Row(
+                      children: [
+                        Icon(
+                          Icons.account_balance_wallet_rounded,
+                          color: Color(0xFFD77FA5),
+                          size: 30,
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          'Personal Finance Tracker',
+                          style: TextStyle(
+                            color: Color(0xFF554452),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -125,38 +189,96 @@ class HomePage extends StatelessWidget {
                   ? snapshot.data!.docs.length
                   : 0;
 
-              return Card(
-                margin: const EdgeInsets.all(16),
-                child: ListTile(
-                  leading: const Icon(
-                    Icons.receipt_long,
-                    color: Colors.deepPurple,
-                    size: 35,
-                  ),
-                  title: const Text('Total Transaksi'),
-                  subtitle: Text('$total transaksi'),
+              return Container(
+                margin: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                ),
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(22),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFFE8A8C4)
+                          .withOpacity(0.12),
+                      blurRadius: 15,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF8DCE8),
+                        borderRadius: BorderRadius.circular(17),
+                      ),
+                      child: const Icon(
+                        Icons.receipt_long_rounded,
+                        color: Color(0xFFD77FA5),
+                        size: 32,
+                      ),
+                    ),
+
+                    const SizedBox(width: 16),
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Total Transaksi',
+                          style: TextStyle(
+                            color: Color(0xFF9B8995),
+                            fontSize: 14,
+                          ),
+                        ),
+
+                        const SizedBox(height: 5),
+
+                        Text(
+                          '$total transaksi',
+                          style: const TextStyle(
+                            color: Color(0xFF554452),
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               );
             },
           ),
 
-          // RIWAYAT TRANSAKSI
+          const SizedBox(height: 25),
+
+          // JUDUL RIWAYAT
           const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Riwayat Transaksi',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.history_rounded,
+                  color: Color(0xFFD77FA5),
                 ),
-              ),
+                SizedBox(width: 8),
+                Text(
+                  'Riwayat Transaksi',
+                  style: TextStyle(
+                    fontSize: 19,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF554452),
+                  ),
+                ),
+              ],
             ),
           ),
 
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
 
+          // DAFTAR TRANSAKSI
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: transactionRef
@@ -165,27 +287,61 @@ class HomePage extends StatelessWidget {
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return const Center(
-                    child: Text('Terjadi kesalahan saat mengambil data'),
+                    child: Text(
+                      'Terjadi kesalahan saat mengambil data',
+                    ),
                   );
                 }
 
                 if (snapshot.connectionState ==
                     ConnectionState.waiting) {
                   return const Center(
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(
+                      color: Color(0xFFD77FA5),
+                    ),
                   );
                 }
 
                 if (!snapshot.hasData ||
                     snapshot.data!.docs.isEmpty) {
-                  return const Center(
-                    child: Text('Belum ada transaksi'),
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.receipt_long_outlined,
+                          size: 65,
+                          color: Color(0xFFE8C5D5),
+                        ),
+                        const SizedBox(height: 12),
+                        const Text(
+                          'Belum ada transaksi',
+                          style: TextStyle(
+                            color: Color(0xFF9B8995),
+                            fontSize: 15,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        const Text(
+                          'Yuk, tambahkan transaksi pertamamu!',
+                          style: TextStyle(
+                            color: Color(0xFFB69AA9),
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 }
 
                 final transactions = snapshot.data!.docs;
 
                 return ListView.builder(
+                  padding: const EdgeInsets.only(
+                    bottom: 90,
+                    left: 16,
+                    right: 16,
+                  ),
                   itemCount: transactions.length,
                   itemBuilder: (context, index) {
                     final document = transactions[index];
@@ -201,12 +357,26 @@ class HomePage extends StatelessWidget {
 
                     final isIncome = type == 'Pemasukan';
 
-                    return Card(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 6,
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFFE8A8C4)
+                                .withOpacity(0.10),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
                       ),
                       child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 8,
+                        ),
+
                         onTap: () {
                           Navigator.push(
                             context,
@@ -223,16 +393,17 @@ class HomePage extends StatelessWidget {
                         },
 
                         leading: CircleAvatar(
+                          radius: 24,
                           backgroundColor: isIncome
-                              ? Colors.green.shade100
-                              : Colors.red.shade100,
+                              ? const Color(0xFFE2F3E8)
+                              : const Color(0xFFF8DCE8),
                           child: Icon(
                             isIncome
-                                ? Icons.arrow_downward
-                                : Icons.arrow_upward,
+                                ? Icons.arrow_downward_rounded
+                                : Icons.arrow_upward_rounded,
                             color: isIncome
-                                ? Colors.green
-                                : Colors.red,
+                                ? const Color(0xFF65A77B)
+                                : const Color(0xFFD77FA5),
                           ),
                         ),
 
@@ -240,96 +411,128 @@ class HomePage extends StatelessWidget {
                           title,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
+                            color: Color(0xFF554452),
+                            fontSize: 15,
                           ),
                         ),
 
-                        subtitle: Text(
-                          '$type\nRp ${amount.toStringAsFixed(0)}',
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            type,
+                            style: const TextStyle(
+                              color: Color(0xFF9B8995),
+                              fontSize: 12,
+                            ),
+                          ),
                         ),
 
-                        isThreeLine: true,
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Rp ${amount.toStringAsFixed(0)}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                                color: isIncome
+                                    ? const Color(0xFF65A77B)
+                                    : const Color(0xFFD77FA5),
+                              ),
+                            ),
 
-                        trailing: PopupMenuButton<String>(
-                          onSelected: (value) async {
-                            // EDIT TRANSAKSI
-                            if (value == 'edit') {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      EditTransactionPage(
-                                    documentId: document.id,
-                                    title: title,
-                                    amount: amount,
-                                    type: type,
-                                    note: note,
-                                  ),
-                                ),
-                              );
-                            }
-
-                            // HAPUS TRANSAKSI
-                            if (value == 'delete') {
-                              final confirm =
-                                  await showDialog<bool>(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: const Text(
-                                    'Hapus Transaksi',
-                                  ),
-                                  content: const Text(
-                                    'Yakin ingin menghapus transaksi ini?',
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(
-                                          context,
-                                          false,
-                                        );
-                                      },
-                                      child: const Text('Batal'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(
-                                          context,
-                                          true,
-                                        );
-                                      },
-                                      child: const Text('Hapus'),
-                                    ),
-                                  ],
-                                ),
-                              );
-
-                              if (confirm == true) {
-                                await transactionRef
-                                    .doc(document.id)
-                                    .delete();
-
-                                if (context.mounted) {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        'Transaksi berhasil dihapus',
+                            PopupMenuButton<String>(
+                              icon: const Icon(
+                                Icons.more_vert,
+                                color: Color(0xFFB69AA9),
+                              ),
+                              onSelected: (value) async {
+                                // EDIT TRANSAKSI
+                                if (value == 'edit') {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          EditTransactionPage(
+                                        documentId: document.id,
+                                        title: title,
+                                        amount: amount,
+                                        type: type,
+                                        note: note,
                                       ),
                                     ),
                                   );
                                 }
-                              }
-                            }
-                          },
 
-                          itemBuilder: (context) => [
-                            const PopupMenuItem(
-                              value: 'edit',
-                              child: Text('Edit'),
-                            ),
-                            const PopupMenuItem(
-                              value: 'delete',
-                              child: Text('Hapus'),
+                                // HAPUS TRANSAKSI
+                                if (value == 'delete') {
+                                  final confirm =
+                                      await showDialog<bool>(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      backgroundColor: Colors.white,
+                                      title: const Text(
+                                        'Hapus Transaksi',
+                                      ),
+                                      content: const Text(
+                                        'Yakin ingin menghapus transaksi ini?',
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(
+                                              context,
+                                              false,
+                                            );
+                                          },
+                                          child: const Text('Batal'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(
+                                              context,
+                                              true,
+                                            );
+                                          },
+                                          child: const Text(
+                                            'Hapus',
+                                            style: TextStyle(
+                                              color: Color(0xFFD77FA5),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+
+                                  if (confirm == true) {
+                                    await transactionRef
+                                        .doc(document.id)
+                                        .delete();
+
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            'Transaksi berhasil dihapus',
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  }
+                                }
+                              },
+                              itemBuilder: (context) => [
+                                const PopupMenuItem(
+                                  value: 'edit',
+                                  child: Text('Edit'),
+                                ),
+                                const PopupMenuItem(
+                                  value: 'delete',
+                                  child: Text('Hapus'),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -344,19 +547,23 @@ class HomePage extends StatelessWidget {
       ),
 
       // TOMBOL TAMBAH TRANSAKSI
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.deepPurple,
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: const Color(0xFFE8A8C4),
         foregroundColor: Colors.white,
+        elevation: 4,
+        icon: const Icon(Icons.add_rounded),
+        label: const Text(
+          'Tambah Transaksi',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  const AddTransactionPage(),
+              builder: (context) => const AddTransactionPage(),
             ),
           );
         },
-        child: const Icon(Icons.add),
       ),
     );
   }
